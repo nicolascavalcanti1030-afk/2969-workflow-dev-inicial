@@ -68,6 +68,11 @@ class Autor {
     return db('livros')
       .where({ autor_id: autorId });
   }
+
+  static async pegarPeloNome(nome) {
+    const resultado = await db.select('*').from('autores').where({ nome });
+    return resultado[0];
+  }
 }
 
 export default Autor;
