@@ -15,13 +15,26 @@ describe('GET em /eventos', () => {
   it('deve retornar uma lista de eventos', (done) => {
     chai.request(app)
       .get('/eventos')
-      .set('Accept', 'appication/json')
+      .set('Accept', 'application/json')
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('array');
         expect(res.body[0]).to.have.property('id');
         expect(res.body[0]).to.have.property('nome');
         expect(res.body[0]).to.have.property('descricao');
+        done();
+      });
+  });
+
+  it('Não deve retornar um evento com id inválido', (done) => {
+    const eventoId = '999';
+    chai.request(app)
+      .get(`/eventos/${eventoId}`)
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body).to.have.property('message')
+          .eql(`id ${eventoId} não encontrado`);
         done();
       });
   });
